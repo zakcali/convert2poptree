@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<!-- Bu yazılım Dr. Zafer Akçalı tarafından oluşturulmuştur -->
+<!-- Programmed by Zafer Akçalı, MD-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Convert HLA Frequencies to Poptree2 Format</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.0.0/papaparse.min.js"></script>	
+</head>
+<body>
+<label for="myfile">Select a csv file:</label>
+<input type="file" id="csvfile" name="Csv File">
+<button onclick="readFunction()">Read</button> <br/> <br/>
+Locus name instead of locus sequence <input type="checkbox" id="locusbox" onclick="showLocusName()"><br/> <br/>
+HLA Frequencies / Poptree2 Output <br />
+<textarea rows = "30" cols = "120" name = "Freq Text" id="freqtext"></textarea> <br /> 
+<button onclick="convertFunction()">Convert</button> 	<button onclick="copyFunction()">Copy</button><br /><br />
+	
+<script>
+// global scope
+var csvtext=""; // input csv file
+var poptreetext=""; // output to textarea
+var locusid="seq"; // display either locus secuence (number), or locus name
+
+function showLocusName() {
+var checkBox = document.getElementById("locusbox"); 
+if (checkBox.checked == true) {	locusid= "loc"; } // locus name
+	else {	locusid= "seq"; } // locus secuence (number)
+}
+
+function readFunction() {
+var file = document.getElementById('csvfile').files[0]; //get filename
+var reader = new FileReader(); // html5 
+	reader.onload = (function(file) {
+	return function(e) {
+	csvtext = this.result;	//read from csv file
+		document.getElementById('freqtext').value=csvtext; // show in textarea
+           }
+		})(file);
+		reader.readAsText(file);
+}
+
+function convertFunction() {
+var poptreetext=""; // output
+var currentLocus="";
+var currentFreq="";
+var shortName=""; // population name, spaces replaced by dash
+var npopulation=0;
+var nloci=0;
+var k=0; // members of locus
+var l=0; // counter to locus
+var popArray= new Array ([]); // a global dictionary which contains locus values once
+var locusArray= new Array ([]); // contains locus names, and values of population
+var locusName= new Array ([]); // A or B or C or DRB1, whatever before *
+var popName= new Array ([]); // population names, except whatever between (...)
+
+
+document.getElementById('freqtext').value=""; // clear textarea
+	results = Papa.parse(csvtext, {	//parse from csv text to results.data array
+	header: false,
+	skipEmptyLines: true
+});
+
+nrows = results.data.length; // number of rows in csv file
+npopulation = (results.data[0].length)/2; // number of population, calculate from first line of csv file
+poptreetext = poptreetext+npopulation.toString() + " populations" + "\n"; // first row of .dat file
+
+for (var i=0; i<npopulation; i++) {
+	popName=results.data[0][2*i].split("("); // remove (n=xxxx) from population name
+	results.data[0][2*i]=  popName[0];
+	shortName=results.data[0][2*i].split(" ").join("-"); // replace spaces with dashes in-between population names
+	results.data[0][2*i]=  shortName;
+	poptreetext = poptreetext + (i+1).toString() + " " + results.data[0][2*i] + "\n"; // print every row as a population
+	}
+poptreetext = poptreetext + "\n"; // one more empty line
+console.log("Number of population = ", npopulation);
+console.log("Number of rows =", nrows);
+for (var i=1; i<nrows; i++) {
+		if (results.data[i][0] == "locus")
+			nloci+=1;
+			else if (results.data[i][0] == "") break;
+	}
+console.log("Number of loci =", nloci);
+
+// initialise every row of a multidimentional array
+for (var i=0; i<nloci; i++) {
+ locusArray.push([0]); // create rows of multidimentional array
+  locusArray[i][0]="0"; // initialise first member of the row
+ popArray.push([0]);
+   popArray[i][0]="0";
+ }
+for (var i=0; i<nloci; i++)
+console.log (locusArray[i].length); 
+ 
+for (var i=0; i<npopulation*2; i=i+2) 		{  // locus column of each population
+l=0; // first locus for each population	
+k=locusArray[l].length;  // remember last member of that locus, first member is zero you pushed
+		for (var j=2; j<nrows; j++) { // locus names of locus column)
+		if (results.data[j][i] =="locus") { l+=1; k=locusArray[l].length; } // end of locus, continue to other locus
+			else if (results.data[j][i] =="") { break;} //end of population, continue to other population
+						
+				else { locusArray[l][k++] = results.data[j][i]; 
+				}
+	}
+
+}
+
+for (var i=0; i<nloci; i++) { // all rows contain 0 at zero location
+	locusArray[i]= locusArray[i].slice(1).sort(); // remove zero, then sort alphabetically
+}
+
+for (var i=0; i<nloci; i++) {  // for every loci
+//map will contain frequencies of locuses  
+ const map = locusArray[i].reduce((acc, e) => acc.set(e, (acc.get(e) || 0) + 1), new Map()); 
+// key=locusname, value= number of populations that locus is exist
+ var j=0;
+ for (const [key, value] of map.entries()) { 
+	popArray[i][j++] = key; // every locus row contains unique members
+	}
+}
+
+for (var i=0; i<nloci; i++) {  // for every loci
+	poptreetext = poptreetext + "@locus " + (i+1).toString() + "   "; // print locus sequence
+	locusName = popArray[i][0].split("*") //locusName[0] will contain text before *
+	poptreetext = poptreetext + locusName[0] + "      "; // print locus name
+	for (var l=0; l<npopulation; l++) {
+		poptreetext = poptreetext + results.data[0][2*l] + "   "; // population names in the same row
+		}
+		poptreetext = poptreetext + "\n"; 
+
+// print every line of HLA docus
+	for (var j=0; j<popArray[i].length; j++) { 
+	currentLocus=popArray[i][j];
+	if (locusid=="loc") poptreetext = poptreetext + "          "+ currentLocus + " * "; 	// print only locus name
+		else poptreetext = poptreetext + "           " + (j+1).toString() +" * "; // print only locus sequence
+
+// find and print side by side HLA frequency of HLA locus for every population below, rows after asterix
+		for (var l=0; l<npopulation; l++) {
+			currentFreq="0.00000";
+			for (var k=2; k<nrows; k++) {
+			if ( results.data[k][2*l] == currentLocus)  { // if locusname exists in population
+				 currentFreq =  results.data[k][2*l+1];	 	// read locus frequency after locus name
+				 break;
+				 }
+			else if (results.data[k][2*l] =="") { 
+				break;
+				} // last line without current locusname 
+		}
+		poptreetext = poptreetext + currentFreq + "      ";
+	}
+// find and print side by side HLA frequency of HLA locus for every population above
+
+//new line before locus name change
+	poptreetext = poptreetext + "\n";
+	}
+	
+	poptreetext = poptreetext + "#                 "; //population size line for dat file
+for (var l=0; l<npopulation; l++)
+	poptreetext = poptreetext + results.data[0][2*l+1] + "           "; // population size in the same row
+	poptreetext = poptreetext + "\n\n"; // one last space for locus area change
+	}
+
+document.getElementById('freqtext').value=poptreetext;
+}
+
+function copyFunction() {
+	document.getElementById('freqtext').select();
+	document.execCommand("copy");
+}
+</script>
+</body>
+</html>
