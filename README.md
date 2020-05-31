@@ -11,8 +11,8 @@ You can copy/paste phylogenetic tree or save "nwk" format from Poptree2 software
 
 Steps to use that software
 
-    1- You have the file  "demo-input.xlsx"
-    2- Export "demo-input.xlsx" file as "demo-input.csv"
+    1- You have HLA data entered to the file "demo-input.xlsx".
+    2- Export "demo-input.xlsx" file as csv formatted "demo-input.csv" file
     3- Use "convert2poptree.js", choose "demo-input.csv" file, click "Read" to read it,
     4- Tick "Locus name instead of locus sequence", click "Convert"
     5- Click "Copy" to copy poptree2 formatted data to clipboard
