@@ -9,3 +9,13 @@ Most of data is already recorded in spreadsheets by scientists. You can use this
 
 You can copy/paste phylogenetic tree or save "nwk" format from Poptree2 software. You can also save calculations.
 
+Steps to use that software
+
+1- You have the file  "demo-input.xlsx"
+2- Export "demo-input.xlsx" file as "demo-input.csv"
+3- Use "convert2poptree.js", choose "demo-input.csv" file, click "Read" to read it,
+4- Tick "Locus name instead of locus sequence", click "Convert"
+5- Click "Copy" to copy poptree2 formatted data to clipboard
+6- create a text file named "demo-output.dat", open it with a text editor, paste it, then save it. 
+7- Download and run Poptree2 software, click "Data Input" to read "demo-output.dat". 
+8- Use poptree2 software.
