@@ -1,5 +1,5 @@
 # convert2poptree
-Convert locus data in excel format to Poptree2 program
+Convert locus data in excel format to Poptree2 software
 
 There are lots of software that measures of the extent of genetic differentiation between populations and constructs phylogenetic trees. Poptree2 is one of them, you can download and run Windows version: http://www.med.kagawa-u.ac.jp/~genomelb/takezaki/poptree2/index.html
 
