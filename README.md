@@ -20,3 +20,7 @@ Steps to use that software
     7- create a text file named "demo-output.dat", open it with a text editor, paste it, then save it. 
     8- Download and run Poptree2 software, click "Data Input" to read "demo-output.dat". 
     9- Use poptree2 software.
+
+You can use http://etetoolkit.org/treeview/ to paste and draw phylogenetic tree. You can find example output at: http://etetoolkit.org/treeview/?treeid=3e0fa6820dcdf29e71533776a2a6ec21&algid=
+
+Note frequency data is real, and got from http://allelefrequencies.net
