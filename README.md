@@ -14,8 +14,9 @@ Steps to use that software
     1- You have HLA data entered to the file "demo-input.xlsx".
     2- Export "demo-input.xlsx" file as csv formatted "demo-input.csv" file
     3- Use "convert2poptree.js", choose "demo-input.csv" file, click "Read" to read it,
-    4- Tick "Locus name instead of locus sequence", click "Convert"
-    5- Click "Copy" to copy poptree2 formatted data to clipboard
-    6- create a text file named "demo-output.dat", open it with a text editor, paste it, then save it. 
-    7- Download and run Poptree2 software, click "Data Input" to read "demo-output.dat". 
-    8- Use poptree2 software.
+    4- Tick "Locus name instead of locus sequence", 
+    5- Click "Convert"
+    6- Click "Copy" to copy poptree2 formatted data to clipboard
+    7- create a text file named "demo-output.dat", open it with a text editor, paste it, then save it. 
+    8- Download and run Poptree2 software, click "Data Input" to read "demo-output.dat". 
+    9- Use poptree2 software.
