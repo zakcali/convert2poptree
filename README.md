@@ -18,8 +18,9 @@ Steps to use that software
     5- Click "Convert"
     6- Click "Copy" to copy poptree2 formatted data to clipboard
     7- create a text file named "demo-output.dat", open it with a text editor, paste it, then save it. 
-    8- Download and run Poptree2 software, click "Data Input" to read "demo-output.dat". 
-    9- Use poptree2 software.
+    8- instead of (6-7) you can use save button if your browser is compatible
+    9- Download and run Poptree2 software, click "Data Input" to read "demo-output.dat". 
+    10- Use poptree2 software.
 
 You can use http://etetoolkit.org/treeview/ to paste "nwk" formatted text and draw phylogenetic tree. You can find example output at: http://etetoolkit.org/treeview/?treeid=3e0fa6820dcdf29e71533776a2a6ec21&algid= Click to "View tree!" to see the drawing
 
